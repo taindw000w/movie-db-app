@@ -1,0 +1,35 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.center-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-bar {
+  width: 95%;
+  margin-left: 16px;
+  margin-bottom: 8px;
+}
+
+.search-centred {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rated-centred {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spiner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
