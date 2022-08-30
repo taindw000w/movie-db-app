@@ -2,7 +2,7 @@ import React from 'react';
 import { Input, Spin, Alert, Pagination, Tabs } from 'antd';
 import { debounce } from 'lodash';
 
-import MovieList from '../movieList/movieList';
+import { MovieList } from '../movieList/movieList';
 import TmdbService from '../services/services';
 import { TmdbServiceProvider } from '../tmdb-service-context';
 
@@ -229,6 +229,10 @@ export class App extends React.Component {
     }
   };
 
+  changePaginationRating = () => {
+    
+  }
+
   handleTabChange = (activeKey) => {
     if (activeKey === "3") {
       this.getQueryRatedMovies();
@@ -288,12 +292,24 @@ export class App extends React.Component {
             </TabPane>
             <TabPane tab="Rated" key="2" className="center-layout">
               { ratedData }
-              <Pagination
+              { (ratedData > 20) ? <Pagination  
+                responsive 
+                pageSize={100} 
+                total={ratedCount} 
+                changePaginationRating={this.changePaginationRating}
+              /> 
+              : <Pagination
                 pageSize={20}
                 responsive
                 total={ratedCount}
                 showSizeChanger={false}
-              />
+              /> } 
+              {/* <Pagination
+                pageSize={20}
+                responsive
+                total={ratedCount}
+                showSizeChanger={false}
+              /> */}
             </TabPane>
           </Tabs>
         </TmdbServiceProvider>

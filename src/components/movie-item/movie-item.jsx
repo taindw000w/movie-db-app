@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import './movie-item.css';
 
-import MovieHeader from '../movie-header/movie-header';
+import { MovieHeader } from '../movie-header/movie-header';
 import MovieFooter from '../movie-footer/movie-footer';
 
-export default class Movie extends React.Component {
+export class Movie extends React.Component {
   constructor(props) {
     super(props);
 

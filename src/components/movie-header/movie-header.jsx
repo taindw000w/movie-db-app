@@ -6,7 +6,7 @@ import './movie-header.css';
 
 import { TmdbServiceConsumer } from '../tmdb-service-context';
 
-export default class MovieHeader extends React.Component {
+export class MovieHeader extends React.Component {
   constructor(props) {
     super(props);
 
