@@ -11,11 +11,14 @@
 }
 
 .search-bar {
-  width: 95%;
+  display: flex;
+  justify-content: center;
   margin-left: 16px;
   margin-bottom: 8px;
 }
-
+.ant-input-group {
+  width: 250px;
+}
 .search-centred {
   display: flex;
   flex-direction: column;
