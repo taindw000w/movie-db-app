@@ -21,6 +21,7 @@ export class App extends React.Component {
       queryRatedMovies: [],
       totalResults: 0,
       ratedCount: 0,
+      pageSize: 10,
       totalQueryRatingResults: 0,
       isLoading: false,
       error: false,
@@ -213,7 +214,7 @@ export class App extends React.Component {
   getQueryRatedMovies = async (page = 1) => {
     const responseJson = await this.tmdbService.getRatedMovies();
     try {
-      const queryRatedMovies =       await responseJson.results;
+      const queryRatedMovies = await responseJson.results;
       const totalQueryRatingResults = await responseJson.total_results;
       this.setState({
         queryRatedMovies,
@@ -229,16 +230,57 @@ export class App extends React.Component {
     }
   };
 
-  changePaginationRating = () => {
-    
-  }
-
   handleTabChange = (activeKey) => {
     if (activeKey === "3") {
       this.getQueryRatedMovies();
     }
   };
   
+  handleChange = async (page = 1) => {
+    
+    const result = await this.tmdbService.searchRatedPage(page);
+    const totalres = await result.totalResults;
+    
+  }
+
+  ratedPageSearch = async (page = 1) => {
+    const { ratedMovies } = this.state;
+
+    this.setState({
+      currentPage: page,
+      ratedMovies,
+      totalResults: 0,
+    });
+
+    try {
+      const response = await this.tmdbService.searchRatedPage(page);
+      const results = await response.results;
+      const totalResults = await response.totalResults;
+      const moviesWithRating = await results.map((movie) => {
+        return {
+          ...movie,
+        };
+      });
+
+      if (totalResults === 0) {
+        if (page > 1) {
+          this.setState({
+            ratedMovies: [],
+            currentPage: page,
+            totalResults: 0,
+          });
+        } else {
+          this.setState({
+            ratedMovies: [],
+            currentPage: page,
+            totalResults,
+          });
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   render() {
     const {
@@ -254,6 +296,7 @@ export class App extends React.Component {
       totalResults,
       ratedMovies,
       ratedCount,
+      pageSize
     } = this.state;
 
     const spinner = isLoading ? <Spin /> : null;
@@ -264,6 +307,17 @@ export class App extends React.Component {
 
     const ratedData = ratedMovies === [] ? null : <MovieList onRate={this.handleRate} movies={ratedMovies} />;
     const queryRatedData = queryRatedMovies === [] ? null : <MovieList onRate={this.handleRate} movies={queryRatedMovies} />;
+    const ratedFilmsPagination =
+            ratedCount < pageSize ? null : (
+              <Pagination
+                pageSize={pageSize}
+                responsive
+                onChange={this.ratedPageSearch}
+                total={ratedCount}
+                showSizeChanger={false}
+              />
+            );
+
     const { TabPane } = Tabs;
 
     return (
@@ -283,7 +337,7 @@ export class App extends React.Component {
               { data }
               <Pagination
                 current={currentPage}
-                pageSize={20}
+                pageSize={pageSize}
                 responsive
                 onChange={this.search}
                 total={totalResults}
@@ -292,24 +346,7 @@ export class App extends React.Component {
             </TabPane>
             <TabPane tab="Rated" key="2" className="center-layout">
               { ratedData }
-              { (ratedData > 20) ? <Pagination  
-                responsive 
-                pageSize={100} 
-                total={ratedCount} 
-                changePaginationRating={this.changePaginationRating}
-              /> 
-              : <Pagination
-                pageSize={20}
-                responsive
-                total={ratedCount}
-                showSizeChanger={false}
-              /> } 
-              {/* <Pagination
-                pageSize={20}
-                responsive
-                total={ratedCount}
-                showSizeChanger={false}
-              /> */}
+              { ratedFilmsPagination }
             </TabPane>
           </Tabs>
         </TmdbServiceProvider>

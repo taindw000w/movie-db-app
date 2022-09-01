@@ -47,6 +47,18 @@ export default class TmdbService {
     };
   };
 
+  searchRatedPage = async (page) => {
+    const RatedUrl = `${this._baseUrl}/guest_session/${this.guestSessionId}/rated/movies?&api_key=${this._apiKey}&page=${page}`;
+    const response = await this.getResource(RatedUrl);
+    const results = await response.results;
+    const totalResults = await response.total_results;
+
+    return {
+      results,
+      totalResults,
+    };
+  };
+
   createGuestSession = async () => {
     const guestSessionUrl = `${this._baseUrl}/authentication/guest_session/new`;
     const fullUrl = `${guestSessionUrl}?&api_key=${this._apiKey}`;
